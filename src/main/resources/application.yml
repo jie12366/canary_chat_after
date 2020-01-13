@@ -1,0 +1,62 @@
+server:
+  port: 666
+
+# 数据源配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://120.78.162.121:3306/chat?useSSL=false
+    # 指定连接池为druid
+    type: com.alibaba.druid.pool.DruidDataSource
+    # druid配置
+    druid:
+      initial-size: 5 # 初始时的连接数
+      max-active: 20 # 最大活跃数
+      min-idle: 5 # 最小保持数
+      max-wait: 3000 # 最大连接等待时间
+      pool-prepared-statements: false # 是否开启PSCache，在mysql中关闭
+      max-open-prepared-statements: -1
+      time-between-eviction-runs-millis: 60000 # 连接空闲时间
+      min-evictable-idle-time-millis: 300000 # 最小存活时间
+      max-evictable-idle-time-millis: 600000 # 最大存活时间
+      # 扩展插件配置
+      filters: stat, wall # stat统计监听 wall防止sql注入
+      aop-patterns: com.coder.nettychat.service.* # Spring的AOP配置
+      # stat配置
+      web-stat-filter:
+        url-pattern: /* # 过滤路径
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*' # 忽略路径
+      # StatViewServlet在Druid中的配置
+      stat-view-servlet:
+        enabled: true # 开启StatViewServlet
+        url-pattern: '/druid/*'
+        reset-enable: false
+        login-username: druid
+        login-password: druid
+        allow: 127.0.0.1
+
+# Mybatis配置
+mybatis:
+  type-aliases-package: com.coder.chat.entity
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations:
+    - classpath:mapper/*.xml
+
+# 通用mapper配置
+mapper:
+  mappers:
+    - tk.mybatis.mapper.common.Mapper
+  notEmpty: true
+
+# 分布式文件系统FDFS
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:             # 缩略图配置
+    width: 80
+    height: 80
+  tracker-list:            #TrackerList地址
+    - 120.78.162.121:22122

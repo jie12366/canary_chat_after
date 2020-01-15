@@ -1,5 +1,9 @@
 server:
   port: 666
+  ssl:
+    key-store: classpath:jie12366-xyz.jks
+    key-store-password: monkJay
+    key-store-type: JKS
 
 # 数据源配置
 spring:

@@ -1,9 +1,11 @@
 package com.coder.nettychat.controller;
 
+import com.coder.nettychat.entity.vo.FriendRequestVO;
 import com.coder.nettychat.enums.ResultCode;
 import com.coder.nettychat.enums.SearchFriendsStatus;
 import com.coder.nettychat.service.FriendRequestService;
 import com.coder.nettychat.service.FriendService;
+import com.coder.nettychat.utils.LogUtil;
 import com.coder.nettychat.utils.result.JsonResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +28,18 @@ public class FriendRequestController {
     FriendService friendService;
 
     @PostMapping("/friendRequest")
-    public JsonResult addFriendRequest(String myUserId, String friendUsername){
+    public JsonResult addFriendRequest(@RequestBody FriendRequestVO friendRequestVO){
+        LogUtil.info("接收者备注：[{}]", friendRequestVO.getAcceptRemark());
         // 0. 判断账号id和好友账号不能为空
-        if (StringUtils.isBlank(myUserId)|| StringUtils.isBlank(friendUsername)) {
+        if (StringUtils.isBlank(friendRequestVO.getSendUserId()) || StringUtils.isBlank(friendRequestVO.getAcceptUsername())
+         || StringUtils.isBlank(friendRequestVO.getVerifyMessage()) || StringUtils.isBlank(friendRequestVO.getAcceptRemark())) {
             return JsonResult.failure(ResultCode.PARAM_IS_BLANK);
         }
         // 获取搜索好友的结果
-        Integer status = friendService.preconditionSearchFriends(myUserId,friendUsername);
+        Integer status = friendService.preconditionSearchFriends(friendRequestVO.getSendUserId(),friendRequestVO.getAcceptUsername());
         if(status.equals(SearchFriendsStatus.SUCCESS.status)){
             // 发送添加好友的请求
-            friendRequestService.sendFriendRequest(myUserId, friendUsername);
+            friendRequestService.sendFriendRequest(friendRequestVO);
             return JsonResult.success();
         }
         return JsonResult.failure(SearchFriendsStatus.getMsgByKey(status));

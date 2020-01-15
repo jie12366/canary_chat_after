@@ -22,6 +22,14 @@ public class FriendRequestVO {
      */
     private String sendFaceImage;
     /**
+     * 接收者账号
+     */
+    private String acceptUsername;
+    /**
+     * 接收者备注
+     */
+    private String acceptRemark;
+    /**
      * 验证信息
      */
     private String verifyMessage;

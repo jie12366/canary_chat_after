@@ -32,21 +32,23 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void sendFriendRequest(String myUserId, String friendUsername) {
+    public void sendFriendRequest(FriendRequestVO friendRequestVO) {
         // 查找好友的账号信息
-        Users users = userService.queryUsersByUsername(friendUsername);
+        Users users = userService.queryUsersByUsername(friendRequestVO.getAcceptUsername());
         // 判断这个添加好友的请求是否存在
-        FriendsRequest friendsRequest = queryRequestIsExist(myUserId, users.getId());
+        FriendsRequest friendsRequest = queryRequestIsExist(friendRequestVO.getSendUserId(), users.getId());
         // 如果请求不存在，再进行下一步，否则直接结束
         if (friendsRequest == null){
             // 新建一个添加好友请求并插入数据库中
             FriendsRequest request = new FriendsRequest();
             request.setId(Sid.nextShort());
-            request.setSendUserId(myUserId);
+            request.setSendUserId(friendRequestVO.getSendUserId());
             request.setAcceptUserId(users.getId());
             request.setRequestDataTime(new Date());
-            // TODO 添加好友的验证信息
-            request.setRequestMessage("请求添加你为朋友");
+            // 添加好友的验证信息
+            request.setRequestMessage(friendRequestVO.getVerifyMessage());
+            // 接收者的备注
+            request.setAcceptRemark(friendRequestVO.getAcceptRemark());
             request.setRequestStatus(RequestStatus.WAITING_VERIFY.message);
             friendsRequestMapper.insert(request);
         }

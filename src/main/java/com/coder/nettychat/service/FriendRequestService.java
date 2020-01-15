@@ -13,10 +13,9 @@ public interface FriendRequestService {
 
     /**
      * 发送好友请求
-     * @param myUserId 我的账号id
-     * @param friendUsername 好友账号
+     * @param friendRequestVO 前端发来的好友请求封装
      */
-    void sendFriendRequest(String myUserId, String friendUsername);
+    void sendFriendRequest(FriendRequestVO friendRequestVO);
 
     /**
      * 根据账号id查找发送添加请求的好友列表

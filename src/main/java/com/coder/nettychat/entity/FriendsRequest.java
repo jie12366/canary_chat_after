@@ -33,6 +33,11 @@ public class FriendsRequest {
     private String acceptUserId;
 
     /**
+     * 接收者的备注
+     */
+    private String acceptRemark;
+
+    /**
      * 请求的时间
      */
     private Date requestDataTime;

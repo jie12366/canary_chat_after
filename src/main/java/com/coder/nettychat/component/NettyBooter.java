@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author monkJay
- * @description
+ * @description 监听容器初始化完成，启动websocket服务器
  * @date 2020/1/7 21:13
  */
 @Component

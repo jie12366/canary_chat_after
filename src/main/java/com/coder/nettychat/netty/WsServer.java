@@ -15,6 +15,11 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * @author monkJay
  * @description
@@ -23,6 +28,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class WsServer {
 
+    /**
+     * 使用静态内部类实现单例模式
+     */
     private static class SingletonWsServer{
         static final WsServer INSTANCE = new WsServer();
     }

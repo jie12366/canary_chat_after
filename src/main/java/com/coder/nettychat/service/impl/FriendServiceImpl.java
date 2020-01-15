@@ -3,9 +3,15 @@ package com.coder.nettychat.service.impl;
 import com.coder.nettychat.entity.MyFriends;
 import com.coder.nettychat.entity.Users;
 import com.coder.nettychat.entity.vo.UsersVO;
+import com.coder.nettychat.enums.MsgAction;
 import com.coder.nettychat.enums.SearchFriendsStatus;
 import com.coder.nettychat.mapper.MyFriendsMapper;
+import com.coder.nettychat.netty.MsgContent;
+import com.coder.nettychat.netty.UserChannelRel;
 import com.coder.nettychat.service.FriendService;
+import com.coder.nettychat.utils.JsonUtil;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -56,6 +62,7 @@ public class FriendServiceImpl implements FriendService {
         return SearchFriendsStatus.SUCCESS.status;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void passFriendRequest(String userId, String friendId, Integer type) {
         // 互相保存为好友
@@ -63,6 +70,14 @@ public class FriendServiceImpl implements FriendService {
         saveFriend(friendId, userId);
         // 更新请求状态为通过
         friendRequestService.updateRequestStatus(userId, friendId , type);
+        // 使用websocket主动推送消息到请求发起者，使他拉取最新的好友列表
+        Channel senderChannel = UserChannelRel.get(userId);
+        if (senderChannel != null) {
+            MsgContent msgContent = new MsgContent();
+            msgContent.setAction(MsgAction.PULL_FRIEND.type);
+            senderChannel.writeAndFlush(
+                    new TextWebSocketFrame(JsonUtil.convertToJson(msgContent)));
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)

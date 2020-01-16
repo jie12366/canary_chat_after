@@ -56,6 +56,10 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
             String msgId = chatMsgService.saveMsg(chatMsgBo);
             chatMsgBo.setMsgId(msgId);
 
+            // 构建一个MsgContent对象发送给接收端
+            MsgContent msgContentBo = new MsgContent();
+            msgContentBo.setAction(MsgAction.CHAT.type);
+            msgContentBo.setChatMsgBo(chatMsgBo);
             // 获取接收者的客户端Channel
             Channel acceptChannel = UserChannelRel.get(chatMsgBo.getReceiverId());
             // 测试通道的打印
@@ -65,7 +69,7 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
                 // TODO 通过第三方进行消息推送
             } else {
                 acceptChannel.writeAndFlush(
-                        new TextWebSocketFrame(JsonUtil.convertToJson(chatMsgBo))
+                        new TextWebSocketFrame(JsonUtil.convertToJson(msgContentBo))
                 );
 //                // 当通道存在时，从ChannelGroup中查找是否存在
 //                Channel findChannel = users.find(acceptChannel.id());

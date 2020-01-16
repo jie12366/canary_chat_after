@@ -69,10 +69,10 @@ public class WsServer {
     }
 
     public void start(){
-        ChannelFuture future = sb.bind(88);
+        ChannelFuture future = sb.bind(888);
         future.addListener((channel) -> {
             if (channel.isSuccess()){
-                LogUtil.info("Netty websocket server启动成功");
+                LogUtil.info("Netty websocket server启动成功, 监听端口:[{}]", future.channel().localAddress());
             }else {
                 LogUtil.info("Netty websocket server启动失败");
             }

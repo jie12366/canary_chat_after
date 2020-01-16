@@ -66,6 +66,10 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
             } else {
                 // 当通道存在时，从ChannelGroup中查找是否存在
                 Channel findChannel = users.find(acceptChannel.id());
+                users.writeAndFlush(
+                        new TextWebSocketFrame(JsonUtil.convertToJson(chatMsgBo))
+                );
+                LogUtil.info("用户通道:[{}]", findChannel);
                 // 如果在ChannelGroup中存在，说明用户是在线的
                 if (findChannel != null){
                     // 给用户发送消息

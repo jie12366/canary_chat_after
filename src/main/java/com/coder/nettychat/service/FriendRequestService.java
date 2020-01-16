@@ -1,6 +1,7 @@
 package com.coder.nettychat.service;
 
 import com.coder.nettychat.entity.vo.FriendRequestVO;
+import com.coder.nettychat.entity.vo.FriendsVO;
 
 import java.util.List;
 
@@ -26,11 +27,9 @@ public interface FriendRequestService {
 
     /**
      * 更新请求的状态
-     * @param userId 我的账号id
-     * @param friendId 好友的账号id
-     * @param type 验证的状态
+     * @param friendsVO FriendsVO
      */
-    void updateRequestStatus(String userId, String friendId, Integer type);
+    void updateRequestStatus(FriendsVO friendsVO);
 
     /**
      * 查询请求是否被处理

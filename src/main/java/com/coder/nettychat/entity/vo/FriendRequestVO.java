@@ -1,6 +1,8 @@
 package com.coder.nettychat.entity.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author monkJay
@@ -8,6 +10,8 @@ import lombok.Data;
  * @date 2020/1/10 21:13
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FriendRequestVO {
     /**
      * 发送者账号ID

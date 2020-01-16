@@ -30,4 +30,9 @@ public class MyFriends {
      * 我好友的账号id
      */
     private String myFriendUserId;
+
+    /**
+     * 好友的备注
+     */
+    private String friendRemark;
 }

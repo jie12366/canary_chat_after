@@ -10,4 +10,22 @@
             #{item}
         </foreach>
     </update>
+
+    <!-- 发送的请求和关联的发送者结果映射 -->
+    <resultMap id="requestRelUser" type="com.coder.nettychat.entity.vo.FriendRequestVO">
+        <result property="verifyMessage" column="request_message"/>
+        <result property="requestStatus" column="request_status"/>
+        <result property="acceptRemark" column="accept_remark"/>
+        <result property="sendUserId" column="id"/>
+        <result property="sendNickname" column="nickname"/>
+        <result property="sendFaceImage" column="face_image"/>
+    </resultMap>
+    
+    <!-- 根据账号id查找发送添加请求的好友列表 -->
+    <select id="getRequestByUserId" parameterType="String" resultMap="requestRelUser">
+        select sender.id, sender.username,sender.nickname, sender.face_image,
+        fr.request_message, fr.request_status, fr.accept_remark
+        from friends_request fr left join users sender on fr.send_user_id = sender.id
+        where fr.accept_user_id = #{userId} order by fr.request_data_time desc
+    </select>
 </mapper>

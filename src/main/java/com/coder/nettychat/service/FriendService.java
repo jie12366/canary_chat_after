@@ -1,5 +1,6 @@
 package com.coder.nettychat.service;
 
+import com.coder.nettychat.entity.vo.FriendsVO;
 import com.coder.nettychat.entity.vo.UsersVO;
 
 import java.util.List;
@@ -20,11 +21,9 @@ public interface FriendService {
 
     /**
      * 通过好友的请求
-     * @param userId 我的账号id
-     * @param friendId 好友账号id
-     * @param type 验证状态
+     * @param friendsVO FriendsVO
      */
-    void passFriendRequest(String userId, String friendId, Integer type);
+    void passFriendRequest(FriendsVO friendsVO);
 
     /**
      * 查找我的好友列表

@@ -3,7 +3,9 @@ package com.coder.nettychat.service.impl;
 import com.coder.nettychat.entity.FriendsRequest;
 import com.coder.nettychat.entity.Users;
 import com.coder.nettychat.entity.vo.FriendRequestVO;
+import com.coder.nettychat.entity.vo.FriendsVO;
 import com.coder.nettychat.enums.RequestStatus;
+import com.coder.nettychat.mapper.CustomMsgMapper;
 import com.coder.nettychat.mapper.FriendsRequestMapper;
 import com.coder.nettychat.service.FriendRequestService;
 import org.n3r.idworker.Sid;
@@ -26,6 +28,9 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     @Resource
     FriendsRequestMapper friendsRequestMapper;
+
+    @Resource
+    CustomMsgMapper customMsgMapper;
 
     @Resource
     UserServiceImpl userService;
@@ -65,20 +70,20 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     @Transactional(propagation = Propagation.SUPPORTS,rollbackFor = Exception.class)
     @Override
     public List<FriendRequestVO> queryRequestByUserId(String userId) {
-        return friendsRequestMapper.getRequestByUserId(userId);
+        return customMsgMapper.getRequestByUserId(userId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateRequestStatus(String userId, String friendId, Integer type) {
+    public void updateRequestStatus(FriendsVO friendsVO) {
         Example example = new Example(FriendsRequest.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("sendUserId", friendId);
-        criteria.andEqualTo("acceptUserId", userId);
+        criteria.andEqualTo("sendUserId", friendsVO.getFriendId());
+        criteria.andEqualTo("acceptUserId", friendsVO.getUserId());
         // 先根据条件获取到FriendsRequest对象
         FriendsRequest friendsRequest = friendsRequestMapper.selectOneByExample(example);
         // 更新请求的状态
-        friendsRequest.setRequestStatus(RequestStatus.getMsgByKey(type));
+        friendsRequest.setRequestStatus(RequestStatus.getMsgByKey(friendsVO.getType()));
         // 更新请求
         friendsRequestMapper.updateByExampleSelective(friendsRequest, example);
     }

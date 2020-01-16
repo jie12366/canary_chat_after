@@ -2,6 +2,7 @@ package com.coder.nettychat.service.impl;
 
 import com.coder.nettychat.entity.MyFriends;
 import com.coder.nettychat.entity.Users;
+import com.coder.nettychat.entity.vo.FriendsVO;
 import com.coder.nettychat.entity.vo.UsersVO;
 import com.coder.nettychat.enums.MsgAction;
 import com.coder.nettychat.enums.SearchFriendsStatus;
@@ -64,14 +65,15 @@ public class FriendServiceImpl implements FriendService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void passFriendRequest(String userId, String friendId, Integer type) {
-        // 互相保存为好友
-        saveFriend(userId, friendId);
-        saveFriend(friendId, userId);
+    public void passFriendRequest(FriendsVO friendsVO) {
+        // 将朋友保存为我的好友，并设置朋友给我的备注
+        saveFriend(friendsVO.getUserId(), friendsVO.getFriendId(), friendsVO.getMyRemark());
+        // 将我保存为朋友的好友，并设置我给朋友的备注
+        saveFriend(friendsVO.getFriendId(), friendsVO.getUserId(), friendsVO.getFriendRemark());
         // 更新请求状态为通过
-        friendRequestService.updateRequestStatus(userId, friendId , type);
+        friendRequestService.updateRequestStatus(friendsVO);
         // 使用websocket主动推送消息到请求发起者，使他拉取最新的好友列表
-        Channel senderChannel = UserChannelRel.get(userId);
+        Channel senderChannel = UserChannelRel.get(friendsVO.getUserId());
         if (senderChannel != null) {
             MsgContent msgContent = new MsgContent();
             msgContent.setAction(MsgAction.PULL_FRIEND.type);
@@ -81,11 +83,13 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveFriend(String userId, String friendId) {
+    public void saveFriend(String userId, String friendId, String remark) {
         MyFriends myFriends = new MyFriends();
         myFriends.setId(Sid.nextShort());
         myFriends.setMyUserId(userId);
         myFriends.setMyFriendUserId(friendId);
+        // 设置好友的备注
+        myFriends.setFriendRemark(remark);
         // 保存我的好友
         myFriendsMapper.insert(myFriends);
     }

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+
 /**
  * @author monkJay
  * @description
@@ -27,10 +29,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+    @Resource
     UserService userService;
 
-    @Autowired
+    @Resource
     FastdfsClient fastdfsClient;
 
     @PostMapping("/login")

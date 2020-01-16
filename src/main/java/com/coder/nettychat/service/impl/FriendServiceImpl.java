@@ -73,7 +73,7 @@ public class FriendServiceImpl implements FriendService {
         // 更新请求状态为通过
         friendRequestService.updateRequestStatus(friendsVO);
         // 使用websocket主动推送消息到请求发起者，使他拉取最新的好友列表
-        Channel senderChannel = UserChannelRel.get(friendsVO.getUserId());
+        Channel senderChannel = UserChannelRel.get(friendsVO.getFriendId());
         if (senderChannel != null) {
             MsgContent msgContent = new MsgContent();
             msgContent.setAction(MsgAction.PULL_FRIEND.type);

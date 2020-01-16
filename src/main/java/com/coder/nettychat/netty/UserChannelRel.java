@@ -1,8 +1,10 @@
 package com.coder.nettychat.netty;
 
+import com.coder.nettychat.utils.LogUtil;
 import io.netty.channel.Channel;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author monkJay
@@ -29,5 +31,11 @@ public class UserChannelRel {
      */
     public static Channel get(String sendId){
         return manager.get(sendId);
+    }
+
+    public static void output(){
+        for (Map.Entry<String, Channel> map : manager.entrySet()) {
+            LogUtil.info("用户:[{}], 通道:[{}]", map.getKey(), map.getValue());
+        }
     }
 }

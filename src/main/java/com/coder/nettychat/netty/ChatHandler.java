@@ -58,6 +58,8 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
             // 获取接收者的客户端Channel
             Channel acceptChannel = UserChannelRel.get(chatMsgBo.getReceiverId());
+            // 测试通道的打印
+            UserChannelRel.output();
             // 如果通道不存在，说明用户不在线
             if (acceptChannel == null){
                 // TODO 通过第三方进行消息推送

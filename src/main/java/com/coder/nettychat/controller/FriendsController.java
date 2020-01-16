@@ -8,9 +8,9 @@ import com.coder.nettychat.service.UserService;
 import com.coder.nettychat.utils.result.JsonResult;
 import com.coder.nettychat.utils.result.ReturnVOUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -22,10 +22,22 @@ import javax.validation.Valid;
 @RequestMapping("/friends")
 public class FriendsController {
 
-    @Autowired
+    @Resource
     UserService userService;
-    @Autowired
+    @Resource
     FriendService friendService;
+
+    @PostMapping("/")
+    public JsonResult addFriend(String friendUsername){
+        // 0. 判断好友账号不能为空
+        if (StringUtils.isBlank(friendUsername)) {
+            return JsonResult.failure(ResultCode.PARAM_IS_BLANK);
+        }
+
+        // 1. 查找好友的信息并返回
+        Users users = userService.queryUsersByUsername(friendUsername);
+        return JsonResult.success(ReturnVOUtil.copyToUsersVO(users));
+    }
 
     /**
      * 搜索好友，做匹配查询而不是模糊查询

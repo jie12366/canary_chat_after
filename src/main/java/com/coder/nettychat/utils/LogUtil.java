@@ -70,6 +70,10 @@ public class LogUtil {
         log().info(message,format);
     }
 
+    public static void info(String var1, Object var2, Object var3){
+        log().info(var1, var2, var3);
+    }
+
     public static void error(String msg, Object e){
         log().error(msg, e);
     }

@@ -81,9 +81,9 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 //                    );
 //                }
                 // 不存在说明用户也是离线的(伪在线)
-                else {
-                    // TODO 通过第三方进行消息推送
-                }
+//                else {
+//                    // TODO 通过第三方进行消息推送
+//                }
             }
         }
         // 3. 签收消息，修改数据库信息，标记为签收

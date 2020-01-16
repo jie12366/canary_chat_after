@@ -1,5 +1,5 @@
 server:
-  port: 666
+  port: 66
   ssl:
     key-store: classpath:jie12366-xyz.jks
     key-store-password: monkJay

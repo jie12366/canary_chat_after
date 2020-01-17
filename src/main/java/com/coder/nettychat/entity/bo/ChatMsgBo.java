@@ -1,4 +1,4 @@
-package com.coder.nettychat.netty;
+package com.coder.nettychat.entity.bo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

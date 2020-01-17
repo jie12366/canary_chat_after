@@ -1,6 +1,7 @@
 package com.coder.nettychat.netty;
 
 import com.coder.nettychat.component.SpringUtil;
+import com.coder.nettychat.entity.bo.ChatMsgBo;
 import com.coder.nettychat.enums.MsgAction;
 import com.coder.nettychat.service.ChatMsgService;
 import com.coder.nettychat.utils.JsonUtil;

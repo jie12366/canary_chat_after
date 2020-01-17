@@ -1,5 +1,6 @@
 package com.coder.nettychat.netty;
 
+import com.coder.nettychat.entity.bo.ChatMsgBo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

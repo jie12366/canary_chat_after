@@ -1,6 +1,7 @@
 package com.coder.nettychat.service;
 
-import com.coder.nettychat.netty.ChatMsgBo;
+import com.coder.nettychat.entity.ChatMsg;
+import com.coder.nettychat.entity.bo.ChatMsgBo;
 
 import java.util.List;
 
@@ -23,4 +24,11 @@ public interface ChatMsgService {
      * @param ids 消息ID集合
      */
     void batchSignMsg(List<String> ids);
+
+    /**
+     * 获取未签收的消息
+     * @param acceptId 接收者id
+     * @return List<ChatMsg>
+     */
+    List<ChatMsg> getUnsignedMsg(String acceptId);
 }

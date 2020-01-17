@@ -4,11 +4,12 @@ import com.coder.nettychat.entity.ChatMsg;
 import com.coder.nettychat.enums.MsgSignStatus;
 import com.coder.nettychat.mapper.ChatMsgMapper;
 import com.coder.nettychat.mapper.CustomMsgMapper;
-import com.coder.nettychat.netty.ChatMsgBo;
+import com.coder.nettychat.entity.bo.ChatMsgBo;
 import com.coder.nettychat.service.ChatMsgService;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -51,5 +52,15 @@ public class ChatMsgServiceImpl implements ChatMsgService {
     @Override
     public void batchSignMsg(List<String> ids) {
         customMsgMapper.batchSignMsg(ids);
+    }
+
+    @Override
+    public List<ChatMsg> getUnsignedMsg(String acceptId) {
+        Example example = new Example(ChatMsg.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("acceptUserId", acceptId);
+        criteria.andEqualTo("signFlag", 0);
+        // 查找该接收者所有未签收的消息并返回
+        return chatMsgMapper.selectByExample(example);
     }
 }

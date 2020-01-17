@@ -111,7 +111,7 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
         }
         // 4. 保持客户端的心跳
         else if (action.equals(MsgAction.KEEPALIVE.type)) {
-
+            LogUtil.info("收到心跳包");
         }
     }
 

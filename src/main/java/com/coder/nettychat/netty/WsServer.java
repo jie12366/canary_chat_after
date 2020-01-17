@@ -63,14 +63,15 @@ public class WsServer {
                         // websocket的数据传输都是以frames进行的
                         pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
 
-                        // 自定义的处理器，用于处理与客户端的通信
-                        pipeline.addLast(new ChatHandler());
                         // 用于激活空闲状态事件触发器
                         // 当Channel在一定时间间隔内没有数据交互时(即处于idle状态), 就会触发指定的事件.
                         // 参数1：readerIdleTimeSeconds 读空闲的时间
                         // 参数2：writerIdleTimeSeconds 写空闲的时间
                         // 参数3：allIdleTimeSeconds 读写空闲的时间
-                        pipeline.addLast(new IdleStateHandler(30, 60, 70));
+                        pipeline.addLast(new IdleStateHandler(65, 70, 80));
+                        // 自定义的处理器一定要放在空闲事件监测的处理器后面
+                        // 用于处理与客户端的通信
+                        pipeline.addLast(new ChatHandler());
                         // 心跳机制的处理器，空闲状态检测
                         pipeline.addLast(new HeartbeatHandler());
                     }

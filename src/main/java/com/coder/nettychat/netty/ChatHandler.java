@@ -109,9 +109,9 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
                 chatMsgService.batchSignMsg(msgIdsList);
             }
         }
-        // 4. 保持客户端的心跳
+        // 4. 接收客户端的心跳信息
         else if (action.equals(MsgAction.KEEPALIVE.type)) {
-            LogUtil.info("收到心跳包");
+            LogUtil.info("收到客户端的心跳包: [{}]", ctx.channel().id().asShortText());
         }
     }
 

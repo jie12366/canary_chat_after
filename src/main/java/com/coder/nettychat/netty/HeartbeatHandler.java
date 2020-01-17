@@ -1,11 +1,11 @@
 package com.coder.nettychat.netty;
 
 import com.coder.nettychat.utils.LogUtil;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+
+import static io.netty.handler.timeout.IdleState.*;
 
 /**
  * @author monkJay
@@ -15,7 +15,9 @@ import io.netty.handler.timeout.IdleStateEvent;
 public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
 
     /**
-     * 针对客户端，如果在指定时间内没有向服务端发送读写心跳，则主动断开
+     * 服务端如果在指定时间内没有收到读写事件，将会造成读写空闲，那么将断开该客户端通道
+     * 客户端向服务端发送心跳，对于服务端来说这是读事件。
+     * 所以客户端发送心跳是保证了服务端的读不处于空闲状态
      * @param ctx ChannelHandlerContext
      * @param evt Object
      * @throws Exception
@@ -26,17 +28,9 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
         if (evt instanceof IdleStateEvent) {
             // 强转为IdleStateEvent
             IdleStateEvent event = (IdleStateEvent)evt;
-            // 读空闲触发，默认不处理
-            if (event.state() == IdleState.READER_IDLE) {
-                LogUtil.info("进入读空闲");
-            }
-            // 写空闲触发，默认不处理
-            else if (event.state() == IdleState.WRITER_IDLE) {
-                LogUtil.info("进入写空闲");
-            }
             // 读写空闲触发，关闭客户端的通道
-            else if (event.state() == IdleState.ALL_IDLE) {
-                LogUtil.info("进入读写空闲");
+            if (event.state() == ALL_IDLE) {
+                LogUtil.info("进入读写空闲，将断开客户端: [{}]", ctx.channel().id().asShortText());
                 // 关闭不用的Channel，避免资源浪费
                 ctx.channel().close();
             }

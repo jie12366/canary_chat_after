@@ -9,6 +9,7 @@ import com.coder.nettychat.mapper.CustomMsgMapper;
 import com.coder.nettychat.entity.bo.ChatMsgBo;
 import com.coder.nettychat.service.ChatMsgService;
 import com.coder.nettychat.utils.file.Base64DecodeMultipartFile;
+import com.coder.nettychat.utils.file.FileUtil;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class ChatMsgServiceImpl implements ChatMsgService {
                 || MsgType.AUDIO.type.equals(chatMsgBo.getType())) {
             MultipartFile multipartFile = Base64DecodeMultipartFile.base64ToMultipartFile(chatMsgBo.getContent());
             try {
-                content = fastdfsClient.uploadFile(multipartFile);
+                content = FileUtil.IMG_SERVER_URL + fastdfsClient.uploadFile(multipartFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }

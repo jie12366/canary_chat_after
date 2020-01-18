@@ -40,7 +40,7 @@ public class ChatMsgServiceImpl implements ChatMsgService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String saveMsg(ChatMsgBo chatMsgBo) {
+    public ChatMsg saveMsg(ChatMsgBo chatMsgBo) {
         String content = "";
         if ((MsgType.TEXT.type.equals(chatMsgBo.getType()))) {
             content = chatMsgBo.getContent();
@@ -67,7 +67,7 @@ public class ChatMsgServiceImpl implements ChatMsgService {
         // 设置消息创建时间
         chatMsg.setCreateTime(new Date());
         chatMsgMapper.insert(chatMsg);
-        return msgId;
+        return chatMsg;
     }
 
     @Override

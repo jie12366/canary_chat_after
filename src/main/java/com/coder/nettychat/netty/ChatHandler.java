@@ -1,6 +1,7 @@
 package com.coder.nettychat.netty;
 
 import com.coder.nettychat.component.SpringUtil;
+import com.coder.nettychat.entity.ChatMsg;
 import com.coder.nettychat.entity.bo.ChatMsgBo;
 import com.coder.nettychat.enums.MsgAction;
 import com.coder.nettychat.enums.MsgType;
@@ -55,8 +56,9 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
             // 获取消息内容
             ChatMsgBo chatMsgBo = msgContent.getChatMsgBo();
             // 将消息存入数据库，并获取消息的ID
-            String msgId = chatMsgService.saveMsg(chatMsgBo);
-            chatMsgBo.setMsgId(msgId);
+            ChatMsg chatMsg = chatMsgService.saveMsg(chatMsgBo);
+            chatMsgBo.setMsgId(chatMsg.getId());
+            chatMsgBo.setContent(chatMsg.getMsg());
             // 构建一个MsgContent对象发送给接收端
             MsgContent msgContentBo = new MsgContent();
             msgContentBo.setAction(MsgAction.CHAT.type);
@@ -64,8 +66,6 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
             // 获取接收者的客户端Channel
             Channel acceptChannel = UserChannelRel.get(chatMsgBo.getReceiverId());
-            // 测试通道的打印
-            UserChannelRel.output();
             // 如果通道不存在，说明用户不在线
             if (acceptChannel == null){
                 // TODO 通过第三方进行消息推送

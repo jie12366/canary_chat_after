@@ -17,7 +17,7 @@ public interface ChatMsgService {
      * @param chatMsgBo 前端传来的消息
      * @return 返回消息的ID
      */
-    String saveMsg(ChatMsgBo chatMsgBo);
+    ChatMsg saveMsg(ChatMsgBo chatMsgBo);
 
     /**
      * 对消息进行批量签收

@@ -20,12 +20,4 @@ public enum MsgSignStatus {
         this.status = status;
         this.content = content;
     }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public String getContent() {
-        return content;
-    }
 }

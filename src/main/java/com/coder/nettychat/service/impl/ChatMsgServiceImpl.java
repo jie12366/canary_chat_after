@@ -1,17 +1,22 @@
 package com.coder.nettychat.service.impl;
 
+import com.coder.nettychat.component.FastdfsClient;
 import com.coder.nettychat.entity.ChatMsg;
 import com.coder.nettychat.enums.MsgSignStatus;
+import com.coder.nettychat.enums.MsgType;
 import com.coder.nettychat.mapper.ChatMsgMapper;
 import com.coder.nettychat.mapper.CustomMsgMapper;
 import com.coder.nettychat.entity.bo.ChatMsgBo;
 import com.coder.nettychat.service.ChatMsgService;
+import com.coder.nettychat.utils.file.Base64DecodeMultipartFile;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -27,17 +32,32 @@ public class ChatMsgServiceImpl implements ChatMsgService {
     ChatMsgMapper chatMsgMapper;
 
     @Resource
+    FastdfsClient fastdfsClient;
+
+    @Resource
     CustomMsgMapper customMsgMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String saveMsg(ChatMsgBo chatMsgBo) {
+        String content = "";
+        if ((MsgType.TEXT.type.equals(chatMsgBo.getType()))) {
+            content = chatMsgBo.getContent();
+        } else if (MsgType.IMGAE.type.equals(chatMsgBo.getType())
+                || MsgType.AUDIO.type.equals(chatMsgBo.getType())) {
+            MultipartFile multipartFile = Base64DecodeMultipartFile.base64ToMultipartFile(chatMsgBo.getContent());
+            try {
+                content = fastdfsClient.uploadFile(multipartFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         ChatMsg chatMsg = new ChatMsg();
         // 将前端传来的信息设置到ChatMsg对象中
         chatMsg.setSendUserId(chatMsgBo.getSenderId());
         chatMsg.setAcceptUserId(chatMsgBo.getReceiverId());
         chatMsg.setType(chatMsgBo.getType());
-        chatMsg.setMsg(chatMsgBo.getContent());
+        chatMsg.setMsg(content);
         // 设置唯一ID
         String msgId = Sid.nextShort();
         chatMsg.setId(msgId);

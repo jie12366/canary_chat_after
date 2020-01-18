@@ -61,7 +61,8 @@ public class WsServer {
                         // 该处理器为运行websocket服务器承担了所有繁重的工作
                         // 它会负责websocket的握手以及处理控制帧
                         // websocket的数据传输都是以frames进行的
-                        pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
+                        pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null,
+                                false, 65536 * 10, false, false, 10000L));
 
                         // 用于激活空闲状态事件触发器
                         // 当Channel在一定时间间隔内没有数据交互时(即处于idle状态), 就会触发指定的事件.

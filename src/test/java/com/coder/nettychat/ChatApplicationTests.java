@@ -1,5 +1,6 @@
 package com.coder.nettychat;
 
+import com.coder.nettychat.service.UserService;
 import com.coder.nettychat.service.impl.ChatMsgServiceImpl;
 import com.coder.nettychat.utils.LogUtil;
 import org.junit.jupiter.api.Test;
@@ -11,10 +12,10 @@ import javax.annotation.Resource;
 class ChatApplicationTests {
 
     @Resource
-    ChatMsgServiceImpl chatMsgService;
+    UserService userService;
 
     @Test
     void testBatchSignedMsg(){
-        LogUtil.info("未签收的消息:[{}]", chatMsgService.getUnsignedMsg("200110042ZDF7P4H"));
+        LogUtil.info("好友的信息:[{}]", userService.queryUsersByUsername("mon"));
     }
 }

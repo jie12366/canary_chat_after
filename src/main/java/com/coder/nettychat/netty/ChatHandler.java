@@ -3,6 +3,7 @@ package com.coder.nettychat.netty;
 import com.coder.nettychat.component.SpringUtil;
 import com.coder.nettychat.entity.bo.ChatMsgBo;
 import com.coder.nettychat.enums.MsgAction;
+import com.coder.nettychat.enums.MsgType;
 import com.coder.nettychat.service.ChatMsgService;
 import com.coder.nettychat.utils.JsonUtil;
 import com.coder.nettychat.utils.LogUtil;
@@ -56,11 +57,11 @@ class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
             // 将消息存入数据库，并获取消息的ID
             String msgId = chatMsgService.saveMsg(chatMsgBo);
             chatMsgBo.setMsgId(msgId);
-
             // 构建一个MsgContent对象发送给接收端
             MsgContent msgContentBo = new MsgContent();
             msgContentBo.setAction(MsgAction.CHAT.type);
             msgContentBo.setChatMsgBo(chatMsgBo);
+
             // 获取接收者的客户端Channel
             Channel acceptChannel = UserChannelRel.get(chatMsgBo.getReceiverId());
             // 测试通道的打印

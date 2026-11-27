@@ -10,7 +10,7 @@ import com.coder.nettychat.utils.file.Base64DecodeMultipartFile;
 import com.coder.nettychat.utils.file.FileUtil;
 import com.coder.nettychat.utils.result.JsonResult;
 import com.coder.nettychat.utils.result.ReturnVOUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +37,7 @@ public class UserController {
     @PostMapping("/login")
     public JsonResult registerOrLogin(@RequestBody Users user) {
         // 0. 判断用户名和密码不能为空
-        if (StringUtils.isBlank(user.getUsername())|| StringUtils.isBlank(user.getPassword())) {
+        if (!StringUtils.hasText(user.getUsername())|| !StringUtils.hasText(user.getPassword())) {
             return JsonResult.failure(ResultCode.USER_OR_PWD_NULL);
         }
 

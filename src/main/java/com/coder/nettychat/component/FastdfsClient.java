@@ -3,9 +3,8 @@ package com.coder.nettychat.component;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,14 +31,14 @@ public class FastdfsClient {
      */
     public String uploadFile(MultipartFile file) throws IOException {
         StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(),
-                FilenameUtils.getExtension(file.getOriginalFilename()), null);
+                getFilenameExtension(file.getOriginalFilename()), null);
 
         return storePath.getPath();
     }
 
     public String uploadFile2(MultipartFile file) throws IOException {
         StorePath storePath = storageClient.uploadImageAndCrtThumbImage(file.getInputStream(), file.getSize(),
-                FilenameUtils.getExtension(file.getOriginalFilename()), null);
+                getFilenameExtension(file.getOriginalFilename()), null);
 
         return storePath.getPath();
     }
@@ -85,7 +84,7 @@ public class FastdfsClient {
      * @return
      */
     public void deleteFile(String fileUrl) {
-        if (StringUtils.isEmpty(fileUrl)) {
+        if (!StringUtils.hasLength(fileUrl)) {
             return;
         }
         try {
@@ -94,5 +93,11 @@ public class FastdfsClient {
         } catch (FdfsUnsupportStorePathException e) {
             e.getMessage();
         }
+    }
+
+    private String getFilenameExtension(String filename) {
+        // Commons IO recognizes both separator styles on every platform.
+        String extension = StringUtils.getFilenameExtension(filename == null ? null : filename.replace('\\', '/'));
+        return extension == null && filename != null ? "" : extension;
     }
 }

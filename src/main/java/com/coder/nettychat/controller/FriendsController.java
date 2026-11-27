@@ -7,7 +7,7 @@ import com.coder.nettychat.service.FriendService;
 import com.coder.nettychat.service.UserService;
 import com.coder.nettychat.utils.result.JsonResult;
 import com.coder.nettychat.utils.result.ReturnVOUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,7 +30,7 @@ public class FriendsController {
     @PostMapping("/")
     public JsonResult addFriend(String friendUsername){
         // 0. 判断好友账号不能为空
-        if (StringUtils.isBlank(friendUsername)) {
+        if (!StringUtils.hasText(friendUsername)) {
             return JsonResult.failure(ResultCode.PARAM_IS_BLANK);
         }
 
@@ -48,7 +48,7 @@ public class FriendsController {
     @PostMapping("/search")
     public JsonResult searchFriend(String myUserId, String friendUsername){
         // 0. 判断账号id和好友账号不能为空
-        if (StringUtils.isBlank(myUserId)|| StringUtils.isBlank(friendUsername)) {
+        if (!StringUtils.hasText(myUserId)|| !StringUtils.hasText(friendUsername)) {
             return JsonResult.failure(ResultCode.PARAM_IS_BLANK);
         }
 

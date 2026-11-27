@@ -8,7 +8,7 @@ import com.coder.nettychat.service.FriendRequestService;
 import com.coder.nettychat.service.FriendService;
 import com.coder.nettychat.utils.LogUtil;
 import com.coder.nettychat.utils.result.JsonResult;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,8 +31,8 @@ public class FriendRequestController {
     public JsonResult addFriendRequest(@RequestBody FriendRequestVO friendRequestVO){
         LogUtil.info("接收者备注：[{}]", friendRequestVO.getAcceptRemark());
         // 0. 判断账号id和好友账号不能为空
-        if (StringUtils.isBlank(friendRequestVO.getSendUserId()) || StringUtils.isBlank(friendRequestVO.getAcceptUsername())
-         || StringUtils.isBlank(friendRequestVO.getVerifyMessage()) || StringUtils.isBlank(friendRequestVO.getAcceptRemark())) {
+        if (!StringUtils.hasText(friendRequestVO.getSendUserId()) || !StringUtils.hasText(friendRequestVO.getAcceptUsername())
+         || !StringUtils.hasText(friendRequestVO.getVerifyMessage()) || !StringUtils.hasText(friendRequestVO.getAcceptRemark())) {
             return JsonResult.failure(ResultCode.PARAM_IS_BLANK);
         }
         // 获取搜索好友的结果
@@ -55,8 +55,8 @@ public class FriendRequestController {
     public JsonResult operatorFriendRequest(@RequestBody FriendsVO friendsVO){
         LogUtil.info("接收到的信息:[{}]", friendsVO);
         // 1. 判断参数都不为空
-        if (StringUtils.isBlank(friendsVO.getUserId()) || StringUtils.isBlank(friendsVO.getFriendId())
-        || StringUtils.isBlank(friendsVO.getFriendRemark()) || StringUtils.isBlank(friendsVO.getMyRemark())) {
+        if (!StringUtils.hasText(friendsVO.getUserId()) || !StringUtils.hasText(friendsVO.getFriendId())
+        || !StringUtils.hasText(friendsVO.getFriendRemark()) || !StringUtils.hasText(friendsVO.getMyRemark())) {
             return JsonResult.failure(ResultCode.PARAM_NOT_COMPLETE);
         }
         // 2. 判断请求是否已被处理过

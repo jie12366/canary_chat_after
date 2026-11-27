@@ -77,13 +77,6 @@
             <version>1.0</version>
         </dependency>
 
-        <!-- Apache工具框架 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
-        </dependency>
-
         <!-- FastDFS分布式文件服务器客户端依赖 -->
         <dependency>
             <groupId>com.github.tobato</groupId>
